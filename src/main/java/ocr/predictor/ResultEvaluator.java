@@ -1,167 +1,119 @@
 package ocr.full.stop.predictor;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 /**
  *
  * @author lahiru
  */
 public class ResultEvaluator {
     
-    String originalText;
-    String newText;
-    LinkedList<String> newParts;
-    LinkedList<String> originalParts;
-    LinkedList<String> missedDots;
-    LinkedList<String> unwantedDots;
-    
-    boolean debug = false;
+    private String originalText;
+    private String newText;
+        
+    boolean debug = true;
+    private int fp, fn, tp, tn; // false positive, false negative, true positive, true negative
+    private int originalTextIndex, newTextIndex;
+    private boolean calculated;
 
     public ResultEvaluator(String originalText, String newText) {
         this.originalText = originalText;
-        this.newText      = newText;
-        newParts      = new LinkedList<String>();
-        originalParts = new LinkedList<String>();
-        missedDots = new LinkedList<String>();
-        unwantedDots = new LinkedList<String>();
-        
-        String partsOfOriginalText[] = originalText.split("\\.");
-        String partsOfNewText[]      = newText.split("\\.");
-        
-        for(String s : partsOfNewText) {
-            newParts.addLast(s);
-        }
-        for(String s : partsOfOriginalText) {
-            originalParts.addLast(s);
-        }
+        this.newText = newText;
+        calculated = false;
     }
     
-    // remove identical parts from both lists
-    private void removeSuccessfullyIdentifiedParts() {
-        boolean toNext = false;
-        Iterator<String> originalIt = originalParts.iterator();
+    private void calculate() {
+        calculated = true;
+        fp = fn = tp = tn = 0;
+        originalTextIndex = 0;
+        newTextIndex = 0;
         
-        while(originalIt.hasNext()) {
-            String original = originalIt.next();
-            Iterator<String> newTextIt = newParts.iterator();
-            while(newTextIt.hasNext()) {
-                String val = newTextIt.next();
-                if(val.equals(original)) {
-                    newTextIt.remove();
-                    originalIt.remove();
-                    toNext = true;
-                    break;
+        while(originalTextIndex < originalText.length() && newTextIndex < newText.length()) {
+            if(originalText.charAt(originalTextIndex) == '.' && newText.charAt(newTextIndex) == '.') {
+                tp++;
+                originalTextIndex++;
+                newTextIndex++;
+                tn--;
+            }
+            else if(originalText.charAt(originalTextIndex) == '.' && newText.charAt(newTextIndex) != '.') {
+                fn++;
+                originalTextIndex++;
+                tn--;
+            }
+            else if(originalText.charAt(originalTextIndex) != '.' && newText.charAt(newTextIndex) == '.') {
+                fp++;
+                newTextIndex++;
+            }
+            else if(originalText.charAt(originalTextIndex) != '.' && originalText.charAt(originalTextIndex) == newText.charAt(newTextIndex)) {
+                tn++;
+                originalTextIndex++;
+                newTextIndex++;
+            }
+            else {
+                if(debug) {
+                    System.out.println("not matching : " + originalText.charAt(originalTextIndex) + ", " + newText.charAt(newTextIndex));
+                    System.out.println("index : " + originalTextIndex);
+                    System.exit(-11);
                 }
             }
-            if(toNext) {
-                toNext = false;
-                continue;
+        }
+        
+        if(debug) {
+            if(originalTextIndex < originalText.length() - 1 || newTextIndex < newText.length() - 1) {
+                System.out.println("half scanned or multiple dots at the end.");
+                System.out.println("index- original: " + originalTextIndex + "   converted: " + newTextIndex);
+                System.exit(-11);
             }
-        }        
-    }
-    
-    private void identifyMissedDots() {
-        Iterator<String> originalIt = originalParts.iterator();
-        String s1, s2;
-        if(originalIt.hasNext()) {
-            s1 = originalIt.next();
-        } else {
-            return;
         }
         
-        while(originalIt.hasNext()) {
-            s2 = originalIt.next();
-            String connected = s1 + s2;
-            
-            Iterator<String> newIt = newParts.iterator();
-            while(newIt.hasNext()) {
-                String newTxt = newIt.next();
-                if(newTxt.equals(connected)) {
-                    String str = s1 + " + " + s2 + " = " + newTxt;
-                    if(debug) System.out.println(str);
-                    missedDots.addLast(str);
-                    newIt.remove();
-                    originalParts.removeFirstOccurrence(s1);
-                    originalParts.removeFirstOccurrence(s2);
-                    break;
-                }
+        if(originalTextIndex == originalText.length() - 1) {
+            if(originalText.charAt(originalTextIndex + 1) == '.') {
+                fn++;
+                originalTextIndex++;
+                tn--;
             }
-            
-            s1 = s2;
         }
-    }
-    
-    private void identifyUnwantedDots() {
-        Iterator<String> newIt = newParts.iterator();
-        String s1, s2;
-        if(newIt.hasNext()) {
-            s1 = newIt.next();
-        } else {
-            return;
-        }
-        
-        while(newIt.hasNext()) {
-            s2 = newIt.next();
-            String connected = s1 + s2;
-            
-            Iterator<String> originalIT = originalParts.iterator();
-            while(originalIT.hasNext()) {
-                String originalTxt = originalIT.next();
-                if(originalTxt.equals(connected)) {
-                    String str = originalTxt + " = " + s1 + " + " + s2;
-                    unwantedDots.addLast(str);
-                    if(debug) System.out.println(str);
-                    originalIT.remove();
-                    newParts.removeFirstOccurrence(s1);
-                    newParts.removeFirstOccurrence(s2);
-                    break;
-                }
+        if(newTextIndex == newText.length() - 1) {
+            if(newText.charAt(newTextIndex + 1) == '.') {
+                fp++;
+                newTextIndex++;
             }
-            
-            s1 = s2;
         }
+        
+        if(debug) {
+            System.out.println("tp = " + tp);
+            System.out.println("tn = " + tn);
+            System.out.println("fp = " + fp);
+            System.out.println("fn = " + fn);
+        }
+        
     }
     
-    public void processText() {
-        removeSuccessfullyIdentifiedParts();
-        identifyMissedDots();
-        identifyUnwantedDots();
-        showResults();
+    public double getPrecision() {
+        if(!calculated) calculate();
+        return (tp * 1.0) / (fp + fn);
     }
     
-    private void showResults() {
-        System.out.println("########### summary ############");
-        System.out.println("Original text--------:");
-        for(String s : originalParts) {
-            System.out.println(s);
-        }
-        System.out.println();
-        
-        System.out.println("new text-------------:");
-        for(String s : newParts) {
-            System.out.println(s);
-        }
-        System.out.println();
-        
-        System.out.println("missed dots----------:");
-        for(String s : missedDots) {
-            System.out.println(s);
-        }
-        System.out.println();
-        
-        System.out.println("unwanted dots--------:");
-        for(String s : unwantedDots) {
-            System.out.println(s);
-        }
-        System.out.println();
+    public double getRecall() {
+        if(!calculated) calculate();
+        return (tp * 1.0) / (tp + fn);
     }
     
+    public double getAccuracy() {
+        if(!calculated) calculate();
+        return (tn * 1.0 + fp) / (tn + tp + fp + fn);
+    }
+    
+    
+    // example implementation
     public static void main(String[] args) {
-        String originalText = "aab.dde.ttd.dds.ss.aax.";
+        
+        String originalText = "aab.dde.tt.d.dds.ss.a.ax.";
         String newText      = "aab.ddettd.dds.s.s.aax.";
         ResultEvaluator x = new ResultEvaluator(originalText, newText);
-        x.processText();
+        System.out.println("precision : " + x.getPrecision());
+        System.out.println("recall : " + x.getRecall());
+        System.out.println("accuracy : " + x.getAccuracy());
+        
     }
     
 }
+
