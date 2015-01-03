@@ -1,4 +1,4 @@
-package ocr.full.stop.predictor;
+package ocr.predictor;
 
 /**
  *
