@@ -17,8 +17,24 @@ import java.util.List;
 public class OcrFullStopPredictor {
 
     DBManager dbManager;
+    
+    private final String shortForms[] = {"ඒ", "බී", "සී", "ඩී", "ඊ", "එෆ්", "ජී", "එච්",
+                                        "අයි", "ජේ", "කේ", "එල්", "එම්", "එන්", "ඕ",
+                                        "පී", "කිව්", "ආර්", "එස්", "ටී", "යූ", "ඩබ්", "ඩබ්ලිව්",
+                                        "එක්ස්", "වයි", "ඉසෙඩ්",
+                                        "පෙ", "ව", "ප",
+                                        "රු",
+                                        "පා", // parliment
+                                        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+                                       };
 
     public String detectFullStops(String str) {
+        for(String shortForm : shortForms) {
+            if(str.equals(shortForm)) {
+                str = str + ".";
+            }
+        }
+        
         double prob = dbManager.getFinalWordProb(str);
         System.out.println(str + " : " + prob);
         if (prob > 0.8) {
