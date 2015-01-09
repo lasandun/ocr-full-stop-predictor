@@ -1,6 +1,5 @@
 package ocr.predictor;
 
-import corpus.sinhala.SinhalaTokenizer;
 import ocr.predictor.db.DBManager;
 
 import java.io.*;
