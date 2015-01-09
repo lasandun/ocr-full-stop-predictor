@@ -4,12 +4,16 @@ import corpus.sinhala.SinhalaTokenizer;
 import ocr.predictor.db.DBManager;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author lahiru
@@ -65,9 +69,12 @@ public class OcrFullStopPredictor {
         dbManager = new DBManager();
 
         for (int counter = 1; counter <= 20; counter++) {
-
-            Path path = Paths.get("/Users/dimuthuupeksha/Documents/Academic/FYP/ocr-full-stop-predictor/src/test/resources/dotReplaced/"+counter+".txt");
-            String writeLocation = "/Users/dimuthuupeksha/Documents/Academic/FYP/ocr-full-stop-predictor/src/test/resources/final/"+counter+".txt";
+            
+            String testDir = Thread.currentThread().getContextClassLoader().getResource(".").getFile() +
+                    "../../src/test/resources/";
+            Path path = Paths.get(testDir + "dotReplaced/" + counter + ".txt");
+            String writeLocation = testDir + "final/" + counter + ".txt";
+            
             try {
                 List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
                 for (int i = 0; i < lines.size(); i++) {
