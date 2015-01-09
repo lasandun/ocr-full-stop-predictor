@@ -70,8 +70,7 @@ public class OcrFullStopPredictor {
 
         for (int counter = 1; counter <= 20; counter++) {
             
-            String testDir = Thread.currentThread().getContextClassLoader().getResource(".").getFile() +
-                    "../../src/test/resources/";
+            String testDir = "/home/maduranga/temp/ocr-full-stop-predictor/src/test/resources/";
             Path path = Paths.get(testDir + "dotReplaced/" + counter + ".txt");
             String writeLocation = testDir + "final/" + counter + ".txt";
             
