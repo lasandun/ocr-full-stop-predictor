@@ -16,7 +16,7 @@ public class ResultEvaluator {
     private String originalText;
     private String finalText;
         
-    private final boolean debug = true;
+    private final boolean debug = false;
     private int fp, fn, tp, tn; // false positive, false negative, true positive, true negative
     private int originalTextIndex, finalTextIndex;
     private boolean calculated;
@@ -35,6 +35,7 @@ public class ResultEvaluator {
         String testDir = "/home/" + System.getProperty("user.name")+ "/Desktop/resources/";
         
         for(int counter = 1; counter <= 1; ++counter) {
+            System.out.println("##################### " + counter + ".txt #####################");
             originalText = "";
             finalText = "";
             calculated = false;
@@ -53,14 +54,16 @@ public class ResultEvaluator {
                 continue;
             }
             
-            System.out.println("original: " + originalText);
-            System.out.println("final: " + finalText);
+            if(debug) {
+                System.out.println("original: " + originalText);
+                System.out.println("final: " + finalText);
+            }
             
             calculate();
             
             System.out.println("precision : " + getPrecision());
             System.out.println("recall : " + getRecall());
-            System.out.println("accuracy : " + getAccuracy());
+//            System.out.println("accuracy : " + getAccuracy());
         }
     }
     
@@ -71,27 +74,30 @@ public class ResultEvaluator {
         finalTextIndex = 0;
         
         while(originalTextIndex < originalText.length() && finalTextIndex < finalText.length()) {
-            System.out.println(originalText.charAt(originalTextIndex) + "  " + finalText.charAt(finalTextIndex));
-            System.out.println(originalTextIndex + "  " + finalTextIndex);
             if(originalText.charAt(originalTextIndex) == '.' && finalText.charAt(finalTextIndex) == '.') {
-                tp++;
                 originalTextIndex++;
                 finalTextIndex++;
-                tn--;
+                tp++;
             }
             else if(originalText.charAt(originalTextIndex) == '.' && finalText.charAt(finalTextIndex) != '.') {
-                fn++;
                 originalTextIndex++;
-                tn--;
+                fn++;
             }
             else if(originalText.charAt(originalTextIndex) != '.' && finalText.charAt(finalTextIndex) == '.') {
-                fp++;
                 finalTextIndex++;
+                fp++;
             }
             else if(originalText.charAt(originalTextIndex) != '.' && originalText.charAt(originalTextIndex) == finalText.charAt(finalTextIndex)) {
-                tn++;
                 originalTextIndex++;
                 finalTextIndex++;
+                
+                // Space is the termination of words
+                // The predictor uses SinhalaWordTokenizer. Therefore all the symbols and other
+                // word separators will be replaced by a space.
+                // True negative -> words of both final text and original text end without a dot
+                if(originalText.charAt(originalTextIndex) == ' ') {
+                    tn++;
+                }
             }
             else {
                 if(debug) {
@@ -143,10 +149,10 @@ public class ResultEvaluator {
         return (tp * 1.0) / (tp + fn);
     }
     
-    public double getAccuracy() {
-        if(!calculated) calculate();
-        return (tn * 1.0 + fp) / (tn + tp + fp + fn);
-    }
+//    public double getAccuracy() {
+//        if(!calculated) calculate();
+//        return (tn * 1.0 + fp) / (tn + tp + fp + fn);
+//    }
     
     
     // example implementation
