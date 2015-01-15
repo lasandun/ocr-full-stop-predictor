@@ -154,7 +154,7 @@ public class ResultEvaluator {
     
     public double getPrecision() {
         if(!calculated) calculate();
-        return (tp * 1.0) / (fp + fn);
+        return (tp * 1.0) / (tp + fp);
     }
     
     public double getRecall() {

@@ -63,9 +63,10 @@ public class OcrFullStopPredictor {
     public OcrFullStopPredictor() {
         dbManager = new DBManager();
         
-        for (int counter = 1; counter <= 1; counter++) {
+        for (int counter = 2; counter <= 2; counter++) {
             
-            String testDir = "/home/" + System.getProperty("user.name")+ "/Desktop/resources/";
+            String testDir = "/home/" + System.getProperty("user.name")+ 
+                "/NetBeansProjects/ocr-full-stop-predictor/src/test/resources/";
             Path path = Paths.get(testDir + "dotReplaced/" + counter + ".txt");
             String writeLocation = testDir + "final/" + counter + ".txt";
             
