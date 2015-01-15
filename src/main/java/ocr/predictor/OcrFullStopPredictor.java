@@ -3,16 +3,11 @@ package ocr.predictor;
 import ocr.predictor.db.DBManager;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author lahiru
@@ -21,7 +16,8 @@ public class OcrFullStopPredictor {
 
     DBManager dbManager;
     
-    private final String shortForms[] = {"ඒ", "බී", "සී", "ඩී", "ඊ", "එෆ්", "ජී", "එච්",
+    /* ඒ. is not here. ******************************************/
+    private final String shortForms[] = {"බී", "සී", "ඩී", "ඊ", "එෆ්", "ජී", "එච්",
                                         "අයි", "ජේ", "කේ", "එල්", "එම්", "එන්", "ඕ",
                                         "පී", "කිව්", "ආර්", "එස්", "ටී", "යූ", "ඩබ්", "ඩබ්ලිව්",
                                         "එක්ස්", "වයි", "ඉසෙඩ්",
@@ -34,7 +30,7 @@ public class OcrFullStopPredictor {
     public String detectFullStops(String str) {
         for(String shortForm : shortForms) {
             if(str.equals(shortForm)) {
-                str = str + ".";
+                return str + ".";
             }
         }
         
@@ -66,10 +62,10 @@ public class OcrFullStopPredictor {
 
     public OcrFullStopPredictor() {
         dbManager = new DBManager();
-
-        for (int counter = 1; counter <= 20; counter++) {
+        
+        for (int counter = 1; counter <= 1; counter++) {
             
-            String testDir = "/home/maduranga/temp/ocr-full-stop-predictor/src/test/resources/";
+            String testDir = "/home/" + System.getProperty("user.name")+ "/Desktop/resources/";
             Path path = Paths.get(testDir + "dotReplaced/" + counter + ".txt");
             String writeLocation = testDir + "final/" + counter + ".txt";
             
