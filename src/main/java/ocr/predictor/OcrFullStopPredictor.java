@@ -72,7 +72,7 @@ public class OcrFullStopPredictor {
             try {
                 List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
                 for (int i = 0; i < lines.size(); i++) {
-                    SinhalaTokenizer tokenizer = new SinhalaTokenizer();
+                    SinhalaTokenizerIgnoringDots tokenizer = new SinhalaTokenizerIgnoringDots();
 
                     List<String> wordList = tokenizer.splitWords(lines.get(i));
                     for (int j = 0; j < wordList.size(); j++) {

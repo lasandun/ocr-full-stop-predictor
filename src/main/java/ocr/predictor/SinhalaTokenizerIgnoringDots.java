@@ -11,13 +11,13 @@ import java.util.LinkedList;
 //
 // Use splitWords() and splitSentences() to split texts
 //
-public class SinhalaTokenizer {
+public class SinhalaTokenizerIgnoringDots {
     
     private final LinkedList<String> ignoringCharList;
     
     private boolean isolatePunctuationsWithSpaces;
     
-    private final String punctuationMarks[] = {".", ",", "\n", " ", "¸", "‚",
+    private final String punctuationMarks[] = {",", "\n", " ", "¸", "‚",
                                     "\"", "/", "-", "|", "\\", "—", "¦",
                                     "”", "‘", "'", "“", "’", "´", "´",
                                     "!", "@", "#", "$", "%", "^", "&", "\\*", "+", "\\-", "£", "\\?", "˜",
@@ -167,7 +167,7 @@ public class SinhalaTokenizer {
         ignoringCharList.addLast("Ò");
     }
     
-    public SinhalaTokenizer() {
+    public SinhalaTokenizerIgnoringDots() {
         isolatePunctuationsWithSpaces = false;
         
         for(String s : punctuationsWithoutLineTokenizingChars) {

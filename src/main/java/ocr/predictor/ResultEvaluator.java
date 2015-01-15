@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,9 +33,10 @@ public class ResultEvaluator {
     }
     
     public void evaluate() throws IOException {
-        String testDir = "/home/" + System.getProperty("user.name")+ "/Desktop/resources/";
+        String testDir = "/home/" + System.getProperty("user.name")+ 
+                "/NetBeansProjects/ocr-full-stop-predictor/src/test/resources/";///"/Desktop/resources/";
         
-        for(int counter = 1; counter <= 1; ++counter) {
+        for(int counter = 1; counter <= 20; ++counter) {
             System.out.println("##################### " + counter + ".txt #####################");
             originalText = "";
             finalText = "";
@@ -45,6 +47,15 @@ public class ResultEvaluator {
                 while( (line = br.readLine()) != null) {
                     originalText += line;
                 }
+                // format the original text using SinhalaTokenizerIgnoringDots
+                SinhalaTokenizerIgnoringDots tokenizer = new SinhalaTokenizerIgnoringDots();
+                String temp = originalText;
+                originalText = "";
+                LinkedList<String> wordList = tokenizer.splitWords(temp);
+                for(String word : wordList) {
+                    originalText += word + " ";
+                }
+                
                 br = new BufferedReader(new FileReader(testDir + "final/" + counter + ".txt"));
                 while((line = br.readLine()) != null) {
                     finalText += line;
@@ -87,10 +98,8 @@ public class ResultEvaluator {
                 finalTextIndex++;
                 fp++;
             }
-            else if(originalText.charAt(originalTextIndex) != '.' && originalText.charAt(originalTextIndex) == finalText.charAt(finalTextIndex)) {
-                originalTextIndex++;
-                finalTextIndex++;
-                
+            else if(originalText.charAt(originalTextIndex) != '.' 
+                    && originalText.charAt(originalTextIndex) == finalText.charAt(finalTextIndex)) {
                 // Space is the termination of words
                 // The predictor uses SinhalaWordTokenizer. Therefore all the symbols and other
                 // word separators will be replaced by a space.
@@ -98,10 +107,14 @@ public class ResultEvaluator {
                 if(originalText.charAt(originalTextIndex) == ' ') {
                     tn++;
                 }
+                
+                originalTextIndex++;
+                finalTextIndex++;
             }
             else {
                 if(debug) {
-                    System.out.println("not matching : " + originalText.charAt(originalTextIndex) + ", " + finalText.charAt(finalTextIndex));
+                    System.out.println("not matching : " + originalText.charAt(originalTextIndex)
+                            + ", " + finalText.charAt(finalTextIndex));
                     System.out.println("index : " + originalTextIndex);
                     System.exit(-11);
                 }
