@@ -49,14 +49,7 @@ public class SinhalaTokenizerIgnoringDots {
                                                                     "\u2013"
                                                                     };
     
-    private final String shortForms[] = {"ඒ\\.", "බී\\.", "සී\\.", "ඩී\\.", "ඊ\\.", "එෆ්\\.", "ජී\\.", "එච්\\.",
-                                        "අයි\\.", "ජේ\\.", "කේ\\.", "එල්\\.", "එම්\\.", "එන්\\.", "ඕ\\.",
-                                        "පී\\.", "කිව්\\.", "ආර්\\.", "එස්\\.", "ටී\\.", "යූ\\.", "ඩබ්\\.", "ඩබ්ලිව්\\.",
-                                        "එක්ස්\\.", "වයි\\.", "ඉසෙඩ්\\.",
-                                        "පෙ\\.", "ව\\.", "ප\\.",
-                                        "රු\\.",
-                                        "0\\.", "1\\.", "2\\.", "3\\.", "4\\.", "5\\.", "6\\.", "7\\.", "8\\.", "9\\."
-                                       };
+    private final String shortForms[] = {};
     
     private final String shortFormIdentifier = "\u0D80"; // this is an unassigned letter of sinhala block
     
