@@ -79,7 +79,7 @@ public class OcrFullStopPredictor {
 //                    System.out.println(line);
                 }
                 
-                String writeLocation = "/home/" + System.getProperty("user.name") + "/Desktop/final/" + counter + ".txt";
+                String writeLocation = "/home/" + System.getProperty("user.name") + "/final/" + counter + ".txt";
                 for (int i = 0; i < lines.size(); i++) {
                     SinhalaTokenizerIgnoringDots tokenizer = new SinhalaTokenizerIgnoringDots();
 
