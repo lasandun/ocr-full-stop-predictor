@@ -1,9 +1,12 @@
 package ocr.predictor;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +20,7 @@ public class ResultEvaluator {
     private String originalText;
     private String finalText;
         
-    private final boolean debug = false;
+    private final boolean debug = true;
     private int fp, fn, tp, tn; // false positive, false negative, true positive, true negative
     private int originalTextIndex, finalTextIndex;
     private boolean calculated;
@@ -33,21 +36,25 @@ public class ResultEvaluator {
     }
     
     public void evaluate() throws IOException {
-        String testDir = "/home/" + System.getProperty("user.name")+ 
-                "/NetBeansProjects/ocr-full-stop-predictor/src/test/resources/";///"/Desktop/resources/";
+//        String testDir = getClass().getResource("/dotReplaced/").getPath();
+//                "/home/" + System.getProperty("user.name")+ 
+//                "/NetBeansProjects/ocr-full-stop-predictor/src/test/resources/";///"/Desktop/resources/";
         
         for(int counter = 1; counter <= 20; ++counter) {
             System.out.println("##################### " + counter + ".txt #####################");
             originalText = "";
             finalText = "";
             calculated = false;
+            
             try {
                 String line;
-                BufferedReader br = new BufferedReader(new FileReader(testDir + "original/" + counter + ".txt"));
+                InputStream fis = getClass().getClassLoader().getResourceAsStream("dotReplaced/" + counter + ".txt");
+                BufferedReader br = new BufferedReader(new InputStreamReader(fis));
                 while( (line = br.readLine()) != null) {
                     originalText += line;
                 }
-                // format the original text using SinhalaTokenizerIgnoringDots
+                fis.close();
+                br.close();
                 SinhalaTokenizerIgnoringDots tokenizer = new SinhalaTokenizerIgnoringDots();
                 String temp = originalText;
                 originalText = "";
@@ -56,10 +63,13 @@ public class ResultEvaluator {
                     originalText += word + " ";
                 }
                 
-                br = new BufferedReader(new FileReader(testDir + "final/" + counter + ".txt"));
+                fis = getClass().getClassLoader().getResourceAsStream("final/" + counter + ".txt");
+                br = new BufferedReader(new InputStreamReader(fis));
                 while((line = br.readLine()) != null) {
                     finalText += line;
                 }
+                fis.close();
+                br.close();
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ResultEvaluator.class.getName()).log(Level.SEVERE, null, ex);
                 continue;
