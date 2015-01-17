@@ -20,7 +20,7 @@ public class ResultEvaluator {
     private String originalText;
     private String finalText;
         
-    private final boolean debug = true;
+    private final boolean debug = false;
     private int fp, fn, tp, tn; // false positive, false negative, true positive, true negative
     private int originalTextIndex, finalTextIndex;
     private boolean calculated;
@@ -84,6 +84,10 @@ public class ResultEvaluator {
             
             System.out.println("precision : " + getPrecision());
             System.out.println("recall : " + getRecall());
+            System.out.println("tp = " + tp);
+            System.out.println("tn = " + tn);
+            System.out.println("fp = " + fp);
+            System.out.println("fn = " + fn);
 //            System.out.println("accuracy : " + getAccuracy());
         }
     }

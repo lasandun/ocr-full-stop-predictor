@@ -7,7 +7,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author lahiru
@@ -27,7 +30,7 @@ public class OcrFullStopPredictor {
                                         "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
                                        };
 
-    public String detectFullStops(String str) {
+    private String detectFullStops(String str) {
         for(String shortForm : shortForms) {
             if(str.equals(shortForm)) {
                 return str + ".";
@@ -43,7 +46,7 @@ public class OcrFullStopPredictor {
     }
 
 
-    public void writeToOutputFile(String path, String str) {
+    private void writeToOutputFile(String path, String str) {
         Writer writer = null;
 
         try {
@@ -63,15 +66,20 @@ public class OcrFullStopPredictor {
     public OcrFullStopPredictor() {
         dbManager = new DBManager();
         
-        for (int counter = 2; counter <= 2; counter++) {
-            
-            String testDir = "/home/" + System.getProperty("user.name")+ 
-                "/NetBeansProjects/ocr-full-stop-predictor/src/test/resources/";
-            Path path = Paths.get(testDir + "dotReplaced/" + counter + ".txt");
-            String writeLocation = testDir + "final/" + counter + ".txt";
+        for (int counter = 1; counter <= 1; counter++) {
             
             try {
-                List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+                LinkedList<String> lines = new LinkedList<>();
+                InputStream originalIS = OcrFullStopPredictor.class.getClassLoader().getResourceAsStream(
+                        "dotReplaced/" + counter + ".txt");
+                BufferedReader originalBR = new BufferedReader(new InputStreamReader(originalIS));
+                String line;
+                while((line = originalBR.readLine()) != null) {
+                    lines.addLast(line);
+//                    System.out.println(line);
+                }
+                
+                String writeLocation = "/home/" + System.getProperty("user.name") + "/Desktop/final/" + counter + ".txt";
                 for (int i = 0; i < lines.size(); i++) {
                     SinhalaTokenizerIgnoringDots tokenizer = new SinhalaTokenizerIgnoringDots();
 
@@ -83,6 +91,8 @@ public class OcrFullStopPredictor {
                     }
                     writeToOutputFile(writeLocation, "\n");
                 }
+                originalBR.close();
+                originalIS.close();
 
             } catch (IOException e) {
                 e.printStackTrace();
