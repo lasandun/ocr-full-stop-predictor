@@ -46,7 +46,7 @@ public class ResultEvaluator {
             
             try {
                 String line;
-                InputStream fis = getClass().getClassLoader().getResourceAsStream("dotReplaced/" + counter + ".txt");
+                InputStream fis = getClass().getClassLoader().getResourceAsStream("original/" + counter + ".txt");
                 BufferedReader br = new BufferedReader(new InputStreamReader(fis));
                 while( (line = br.readLine()) != null) {
                     originalText += line;
