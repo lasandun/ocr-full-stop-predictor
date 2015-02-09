@@ -34,9 +34,6 @@ public class ResultEvaluator {
     }
     
     public void evaluate() throws IOException {
-//        String testDir = getClass().getResource("/dotReplaced/").getPath();
-//                "/home/" + System.getProperty("user.name")+ 
-//                "/NetBeansProjects/ocr-full-stop-predictor/src/test/resources/";///"/Desktop/resources/";
         
         for(int counter = 1; counter <= 20; ++counter) {
             System.out.println("##################### " + counter + ".txt #####################");
@@ -86,7 +83,6 @@ public class ResultEvaluator {
             System.out.println("tn = " + tn);
             System.out.println("fp = " + fp);
             System.out.println("fn = " + fn);
-//            System.out.println("accuracy : " + getAccuracy());
         }
     }
     
