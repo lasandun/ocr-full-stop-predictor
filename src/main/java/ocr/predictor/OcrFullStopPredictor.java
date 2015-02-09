@@ -60,8 +60,7 @@ public class OcrFullStopPredictor {
     public OcrFullStopPredictor() {
         dbManager = new DBManager();
         
-        for (int counter = 1; counter <= 1; counter++) {
-            
+        for (int counter = 1; counter <= 20; counter++) {
             try {
                 LinkedList<String> lines = new LinkedList<>();
                 InputStream originalIS = OcrFullStopPredictor.class.getClassLoader().getResourceAsStream(
@@ -70,7 +69,6 @@ public class OcrFullStopPredictor {
                 String line;
                 while((line = originalBR.readLine()) != null) {
                     lines.addLast(line);
-//                    System.out.println(line);
                 }
                 
                 String writeLocation = "/home/" + System.getProperty("user.name") + "/final/" + counter + ".txt";
@@ -87,13 +85,10 @@ public class OcrFullStopPredictor {
                 }
                 originalBR.close();
                 originalIS.close();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        //System.out.println("Hoooo");
     }
 
     public static void main(String[] args) {
