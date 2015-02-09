@@ -1,12 +1,6 @@
 package ocr.predictor.db;
 
 import com.datastax.driver.core.*;
-import oracle.jdbc.OracleCallableStatement;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * Created by dimuthuupeksha on 1/1/15.
