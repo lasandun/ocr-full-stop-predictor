@@ -1,6 +1,7 @@
 package ocr.predictor.db;
 
 import com.datastax.driver.core.*;
+import org.apache.log4j.Logger;
 
 /**
  * Created by dimuthuupeksha on 1/1/15.
@@ -10,6 +11,7 @@ public class DBManager {
 
     private static Cluster cluster;
     private static Session session;
+    final static Logger logger = Logger.getLogger(DBManager.class);
 
     static {
         connect("192.248.15.239");
@@ -20,11 +22,11 @@ public class DBManager {
         cluster = Cluster.builder()
                 .addContactPoint(node).build();
         Metadata metadata = cluster.getMetadata();
-        System.out.printf("Connected to cluster: %s\n",
-                metadata.getClusterName());
+        logger.info("Connected to cluster: " + metadata.getClusterName() + "\n");
         for (Host host : metadata.getAllHosts()) {
-            System.out.printf("Datatacenter: %s; Host: %s; Rack: %s\n",
-                    host.getDatacenter(), host.getAddress(), host.getRack());
+            logger.info("Datacentre: " + host.getDatacenter());
+            logger.info("host : " + host.getAddress());
+            logger.info("Rank : " + host.getRack());
         }
         session = cluster.connect();
     }
@@ -58,7 +60,7 @@ public class DBManager {
             break;
         }
 
-        System.out.println(frequency);
+        logger.info(frequency);
 
 
         return frequency;

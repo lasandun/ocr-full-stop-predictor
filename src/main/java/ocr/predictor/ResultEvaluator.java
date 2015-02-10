@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -15,6 +14,7 @@ import java.util.logging.Logger;
  */
 public class ResultEvaluator {
     
+    private final static Logger logger = Logger.getLogger(ResultEvaluator.class);
     private String originalText;
     private String finalText;
         
@@ -36,7 +36,7 @@ public class ResultEvaluator {
     public void evaluate() throws IOException {
         
         for(int counter = 1; counter <= 20; ++counter) {
-            System.out.println("##################### " + counter + ".txt #####################");
+            logger.info("##################### " + counter + ".txt #####################");
             originalText = "";
             finalText = "";
             calculated = false;
@@ -66,23 +66,23 @@ public class ResultEvaluator {
                 fis.close();
                 br.close();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(ResultEvaluator.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex);
                 continue;
             }
             
             if(debug) {
-                System.out.println("original: " + originalText);
-                System.out.println("final: " + finalText);
+                logger.info("original: " + originalText);
+                logger.info("final: " + finalText);
             }
             
             calculate();
             
-            System.out.println("precision : " + getPrecision());
-            System.out.println("recall : " + getRecall());
-            System.out.println("tp = " + tp);
-            System.out.println("tn = " + tn);
-            System.out.println("fp = " + fp);
-            System.out.println("fn = " + fn);
+            logger.info("precision : " + getPrecision());
+            logger.info("recall : " + getRecall());
+            logger.info("tp = " + tp);
+            logger.info("tn = " + tn);
+            logger.info("fp = " + fp);
+            logger.info("fn = " + fn);
         }
     }
     
@@ -121,9 +121,9 @@ public class ResultEvaluator {
             }
             else {
                 if(debug) {
-                    System.out.println("not matching : " + originalText.charAt(originalTextIndex)
+                    logger.info("not matching : " + originalText.charAt(originalTextIndex)
                             + ", " + finalText.charAt(finalTextIndex));
-                    System.out.println("index : " + originalTextIndex);
+                    logger.info("index : " + originalTextIndex);
                     System.exit(-11);
                 }
             }
@@ -131,8 +131,8 @@ public class ResultEvaluator {
         
         if(debug) {
             if(originalTextIndex < originalText.length() - 1 || finalTextIndex < finalText.length() - 1) {
-                System.out.println("half scanned or multiple dots at the end.");
-                System.out.println("index- original: " + originalTextIndex + "   converted: " + finalTextIndex);
+                logger.info("half scanned or multiple dots at the end.");
+                logger.info("index- original: " + originalTextIndex + "   converted: " + finalTextIndex);
                 System.exit(-11);
             }
         }
@@ -152,10 +152,10 @@ public class ResultEvaluator {
         }
         
         if(debug) {
-            System.out.println("tp = " + tp);
-            System.out.println("tn = " + tn);
-            System.out.println("fp = " + fp);
-            System.out.println("fn = " + fn);
+            logger.info("tp = " + tp);
+            logger.info("tn = " + tn);
+            logger.info("fp = " + fp);
+            logger.info("fn = " + fn);
         }
         
     }
@@ -178,17 +178,8 @@ public class ResultEvaluator {
     
     // example implementation
     public static void main(String[] args) throws IOException {
-        
         ResultEvaluator x = new ResultEvaluator();
         x.evaluate();
-        
-//        String originalText = "aab.dde.tt.d.dds.ss.a.ax.";
-//        String newText      = "aab.ddettd.dds.s.s.aax.";
-//        ResultEvaluator x = new ResultEvaluator(originalText, newText);
-//        System.out.println("precision : " + x.getPrecision());
-//        System.out.println("recall : " + x.getRecall());
-//        System.out.println("accuracy : " + x.getAccuracy());
-        
     }
     
 }

@@ -1,6 +1,7 @@
 package ocr.predictor;
 
 import ocr.predictor.db.DBManager;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 public class OcrFullStopPredictor {
 
+    final static Logger logger = Logger.getLogger(OcrFullStopPredictor.class);
     DBManager dbManager;
     
     /* ඒ. is not here. ******************************************/
@@ -31,7 +33,7 @@ public class OcrFullStopPredictor {
         }
         
         double prob = dbManager.getFinalWordProb(str);
-        System.out.println(str + " : " + prob);
+        logger.info(str + " : " + prob);
         if (prob > 0.8) {
             str = str + ".";
         }
@@ -85,7 +87,7 @@ public class OcrFullStopPredictor {
                 originalBR.close();
                 originalIS.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     }

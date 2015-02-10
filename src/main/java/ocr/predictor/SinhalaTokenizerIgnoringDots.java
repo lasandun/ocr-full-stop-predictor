@@ -2,6 +2,7 @@ package ocr.predictor;
 
 
 import java.util.LinkedList;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -12,6 +13,8 @@ import java.util.LinkedList;
 // Use splitWords() and splitSentences() to split texts
 //
 public class SinhalaTokenizerIgnoringDots {
+    
+    final static Logger logger = Logger.getLogger(SinhalaTokenizerIgnoringDots.class);
     
     private final LinkedList<String> ignoringCharList;
     
@@ -165,7 +168,7 @@ public class SinhalaTokenizerIgnoringDots {
         
         for(String s : punctuationsWithoutLineTokenizingChars) {
             if(s.equals(shortFormIdentifier)) {
-                System.out.println("Do not use " + shortFormIdentifier + " at punctuation list.");
+                logger.info("Do not use " + shortFormIdentifier + " at punctuation list.");
                 System.exit(-1);
             }
         }
