@@ -92,5 +92,10 @@ public class DBManager {
         }
         return freq;
     }
+    
+    public void closeConnection() {
+        session.close();
+        cluster.close();
+    }
 
 }

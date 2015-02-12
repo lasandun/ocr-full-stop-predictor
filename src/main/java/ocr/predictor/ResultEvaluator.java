@@ -21,6 +21,7 @@ package ocr.predictor;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -81,8 +82,7 @@ public class ResultEvaluator {
                     originalText += word + " ";
                 }
                 
-                fis = getClass().getClassLoader().getResourceAsStream("final/" + counter + ".txt");
-                br = new BufferedReader(new InputStreamReader(fis));
+                br = new BufferedReader(new FileReader(SysProperty.getProperty("resultsPath") + counter + ".txt"));
                 while((line = br.readLine()) != null) {
                     finalText += line;
                 }

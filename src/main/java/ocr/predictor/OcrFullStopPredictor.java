@@ -73,7 +73,9 @@ public class OcrFullStopPredictor {
 
     public OcrFullStopPredictor() {
         dbManager = new DBManager();
-        
+    }
+    
+    public void processFiles() {
         for (int counter = 1; counter <= 20; counter++) {
             try {
                 LinkedList<String> lines = new LinkedList<>();
@@ -85,7 +87,7 @@ public class OcrFullStopPredictor {
                     lines.addLast(line);
                 }
                 
-                String writeLocation = "/home/" + System.getProperty("user.name") + "/final/" + counter + ".txt";
+                String writeLocation = SysProperty.getProperty("resultsPath") + counter + ".txt";
                 for (int i = 0; i < lines.size(); i++) {
                     SinhalaTokenizerIgnoringDots tokenizer = new SinhalaTokenizerIgnoringDots();
 
@@ -104,10 +106,17 @@ public class OcrFullStopPredictor {
             }
         }
     }
+    
+    public void closeConnection() {
+        dbManager.closeConnection();
+    }
 
     // example implementation
     public static void main(String[] args) {
-        new OcrFullStopPredictor();
+        OcrFullStopPredictor x = new OcrFullStopPredictor();
+        x.processFiles();
+        x.closeConnection();
+        
     }
 
 }
