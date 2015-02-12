@@ -20,6 +20,7 @@
 package ocr.predictor.db;
 
 import com.datastax.driver.core.*;
+import ocr.predictor.SysProperty;
 import org.apache.log4j.Logger;
 
 /**
@@ -37,7 +38,9 @@ public class DBManager {
     }
 
     public static void connect(String node) {
-        cluster = Cluster.builder().addContactPoint(node).build();
+        String username = SysProperty.getProperty("username");
+        String password = SysProperty.getProperty("password");
+        cluster = Cluster.builder().addContactPoint(node).withCredentials(username, password).build();
         Metadata metadata = cluster.getMetadata();
         logger.info("Connected to cluster: " + metadata.getClusterName() + "\n");
         for (Host host : metadata.getAllHosts()) {
